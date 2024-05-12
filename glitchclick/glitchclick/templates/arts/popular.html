@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}The most popular{% endblock %}
+
+{% block content %}
+    <div class="inner-content">
+        {% if arts %}
+        {% for art in arts %}
+            <a href="{% url 'arts:detail' art.id %}" class="art-link" style="background-image: url('{{art.image.url}}');"></a>
+        {% endfor %}
+        {% else %}
+            <p>There are no arts</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block pagination %}
+
+{% if arts.has_other_pages %}
+<ul class="pagination">
+    {% if arts.has_previous %}
+        <li><a href="?page={{ arts.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in arts.paginator.page_range %}
+        {% if arts.number == i %}
+            <li><a class="active"><span>{{ i }}</span></a></li>
+        {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if arts.has_next %}
+        <li><a href="?page={{ arts.next_page_number }}">&raquo;</a></li>
+    {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+ </ul>
+{% endif %}
+
+{% endblock %}

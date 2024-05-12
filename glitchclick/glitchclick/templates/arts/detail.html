@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Art number {{art.id}}{% endblock %}
+
+{% block addition %}
+    {% if not user.is_authenticated %}
+        <p>Register or log in to access all site features</p>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="detail">
+        <div class="inner-detail">
+            <img src="{{art.image.url}}" alt="{{art.keywords}}">
+            <p style="display:inline; font-size:20px;">Views: {{art.views}} | Saved: {{art.saved}} times</p>
+            {% if user.is_authenticated %}
+                <p style="display:inline; font-size:20px;"> | </p>
+                {% if art in profile.favorites.all %}
+                    <a class="favorites" href="{% url 'arts:remove_favorite' art.id %}">Remove from favorites</a>
+                {% else %}
+                    <a class="favorites" href="{% url 'arts:add_favorite' art.id %}">Add to favorites</a>
+                {% endif %}
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                {% if comments %}
+                    <h2>Comments: </h2>
+                    <br>
+                    {% for c in comments %}
+                        <div class="comment">
+                            <a class="comment_author" href="{% url 'accounts:profile' c.author.id %}"><div class="profile-avatar-small" style="background-image: url('{{c.author.profile.avatar.url}}'); display:inline-block;"></div>{{c.author.username}}</a>
+                            <p>{{c.text|linebreaksbr}}</p>
+                            {% if c.author == request.user %}
+                                <a href="{% url 'arts:delete_comment' c.id art.id %}" style="color: red;" class="delete_comment">Delete comment</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                <p>There is no comments</p>
+                {% endif %}
+                <hr>
+                <p>You can leave your own comment:</p>
+                <form action="{% url 'arts:leave_comment' art.id %}" method="POST">
+                    {% csrf_token %}
+                    <textarea name="comment_text" style="width:400px;height:150px;padding:5px;"></textarea><br>
+                    <button class="btn">Leave comment</button>
+                </form>
+            {% else %}
+                <p style="margin-top:20px; color:red;">Please register or login to leave and see other comments</p>
+            {% endif %}
+        </div>
+        <div class="another">
+            {% for art in another %}
+                <a href="{% url 'arts:detail' art.id %}" class="another-link" style="background-image: url('{{art.image.url}}')"></a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

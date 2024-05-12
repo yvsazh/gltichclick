@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <script src="{% static 'js/jquery.js' %}"></script>
+</head>
+<body>
+    <header>
+        <a class="heading" href="/">GlitchClick</a>
+        <form action="{% url 'arts:search' %}" method="GET">
+            <input type="text" name = "keywords" placeholder = "Search">
+            <button>Search</button>
+        </form>
+        <div class="registration">
+            {% if user.is_authenticated %}
+                <a href="#" id="small_profile_menu"><div class="profile-avatar-medium" style="background-image: url('{{request.user.profile.avatar.url}}')"></div></a>
+                <div class="mini-profile-menu">
+                    <a href="{% url 'accounts:profile' request.user.id %}">Watch my profile</a>
+                    <a href="{% url 'accounts:edit_profile' %}">Edit profile</a>
+                    <a href="{% url 'logout' %}?next=/">Logout</a>
+                </div>
+            {% else %}
+                <a href="{% url 'login'%}">Login</a>
+                <a href="{% url 'accounts:register' %}">Register</a>
+            {% endif %}
+        </div>
+    </header>
+    <div class="up-sidebar">
+        <a href="{% url 'arts:recomendations' %}">Recommendations</a>
+        <a href="{% url 'arts:popular' %}">Most popular</a>
+        <a href="{% url 'arts:saviest' %}">Most saved</a>
+    </div>
+    {% block addition %}{% endblock %}
+    <div class="wrapper">
+        <div class="content">
+            <div class="sidebar">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'arts:recomendations' %}">Recommendations</a>
+                {% else %}
+                    <p>Register or log in to get recommendations</p>
+                {% endif %}
+                <a href="{% url 'arts:popular' %}">Most popular</a>
+                <a href="{% url 'arts:saviest' %}">Most saved</a>
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+        {% block pagination %}{% endblock %}
+
+    </div>
+
+    <footer>
+        <p>Made with Python Django by <b>Mem4ik</b> and <b>Nick Vany</b>.</p>
+    </footer>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

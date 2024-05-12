@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}{{profile.user.username}}{% endblock %}
+
+{% block content %}
+    <div class="profile">
+        {% if profile.user == request.user %}
+            <h1>Your profile:</h1>    
+            <div class="profile-avatar-big" style="background-image: url('{{profile.avatar.url}}');"></div>        
+            <a class="edit_profile_link" href="{% url 'accounts:edit_profile' %}">Edit profile</a>
+            <p>Your nickname: {{profile.user.username}}</p>
+            <p>Your e-mail: {{profile.user.email}}</p>
+        {% else %}
+            <h1>Profile of {{profile.user.username}}</h1>
+            <div class="profile-avatar-big" style="background-image: url('{{profile.avatar.url}}');"></div>
+        {% endif %}
+        {% if profile.user == request.user %}
+                <h3>Your favorites:</h1>
+            {% else %}
+                <h1>Favorites of {{profile.user.username}}:</h1>
+            {% endif %}
+        <div class="inner-content">
+            {% if profile.favorites.count > 0 %}
+                {% for art in profile.favorites.all %}
+                <div class="art">
+                    <a href="{% url 'arts:detail' art.id %}" class="art-link" style="display:block; background-image: url('{{art.image.url}}');"></a>
+                    <br>
+                    {% if profile.user == request.user %}
+                        <a class="favorites" href="{% url 'arts:remove_favorite' art.id %}">Remove from favorites</a>
+                    {% else %}
+                        {% if art not in your_profile.favorites.all %}
+                            <a class="favorites" href="{% url 'arts:add_favorite' art.id %}">Add to favorites</a>
+                        {% else %}
+                            <a class="favorites" href="{% url 'arts:remove_favorite' art.id %}">Remove from my favorites</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: red;">You don't have favorites</p>
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,178 @@
+from django.shortcuts import render, reverse
+from .models import *
+from accounts.models import *
+from django.http import Http404, HttpResponseRedirect
+from django.db.models import Q
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+def popular(request):
+	the_most_sexy = Art.objects.get(id = 68)
+	the_most_sexy.views = -1
+	the_most_sexy.saved = -1
+	the_most_sexy.save()
+	art_list = Art.objects.order_by('-views')
+
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(art_list, 15)
+	try:
+		arts = paginator.page(page)
+	except PageNotAnInteger:
+		arts = paginator.page(1)
+	except EmptyPage:
+		arts = paginator.page(paginator.num_pages)
+
+	return render(request, 'arts/popular.html', {"arts": arts})
+
+def saviest(request):
+	art_list = Art.objects.order_by('-saved')
+	the_most_sexy = Art.objects.get(id = 68)
+	the_most_sexy.views = -1
+	the_most_sexy.saved = -1
+	the_most_sexy.save()
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(art_list, 15)
+	try:
+		arts = paginator.page(page)
+	except PageNotAnInteger:
+		arts = paginator.page(1)
+	except EmptyPage:
+		arts = paginator.page(paginator.num_pages)
+
+	return render(request, 'arts/popular.html', {"arts": arts})
+
+def detail(request, art_id):
+	try:
+		art = Art.objects.get(id = art_id)
+	except:
+		raise Http404("Can't find this art :(")
+	art.views += 1
+	art.save()
+	try:
+		profile = Profile.objects.get(user = request.user)
+	except:
+		profile = 0
+	query = str(art.keywords).split()
+	another = []
+	is_searched_good = False
+	for i in range(len(query)):
+		searched = Art.objects.filter(Q(keywords__icontains=query[i].lower()))
+		for j in range(len(searched)):
+			if j < 5:
+				if str(searched[j].keywords).split() != query:
+					another.append(searched[j])
+		else:
+			break
+	another = set(another)
+	comments = art.comment_set.all()
+	return render(request, 'arts/detail.html', {'art': art, "another": another, 'profile': profile, 'comments': comments})
+
+def search(request):
+	query = request.GET.get('keywords')
+	arts = Art.objects.filter(Q(keywords__icontains=query))
+	is_searched_good = True
+	if list(arts) == []:
+		arts = list(arts)
+		is_searched_good = False
+		query = query.split()
+		for i in range(len(query)):
+			searched = Art.objects.filter(Q(keywords__icontains=query[i].lower()))
+			for j in range(len(searched)):
+				arts.append(searched[j])
+		arts = set(arts)
+
+	return render(request, 'arts/search.html', {'arts': arts, 'is_searched_good': is_searched_good})
+
+def add_favorite(request, art_id):
+	try:
+		user_profile = Profile.objects.get(user = request.user)
+		art = Art.objects.get(id = art_id)
+	except:
+		raise Http404("Can't find this art")
+
+	user_profile.favorites.add(art)
+	for i in art.keywords.split():
+		user_profile.recomendations += f' {i}'
+	user_profile.are_recomendations_are_ready += 1
+	user_profile.girl_or_boy += f' {art.gender}'
+	user_profile.save()
+
+	art.saved += 1
+	art.save()
+
+	return HttpResponseRedirect(reverse('arts:detail', args=(art_id, )))
+
+def remove_favorite(request, art_id):
+	try:
+		user_profile = Profile.objects.get(user = request.user)
+		art = Art.objects.get(id = art_id)
+	except:
+		raise Http404("Can't find this art")
+
+	user_profile.favorites.remove(art)
+	user_profile.save()
+
+	return HttpResponseRedirect(reverse('arts:detail', args=(art_id, )))
+
+def leave_comment(request, art_id):
+	try:
+		art = Art.objects.get(id = art_id)
+	except:
+		raise Http404("Can't find this art")
+
+	art.comment_set.create(author = request.user, text = request.POST['comment_text'])
+
+	return HttpResponseRedirect(reverse('arts:detail', args=(art.id, )))
+
+def delete_comment(request, comment_id, art_id):
+	try:
+		art = Art.objects.get(id = art_id)
+	except:
+		raise Http404("Can't find this art")
+	comment = Comment.objects.get(id = comment_id)
+	comment.delete()
+
+	return HttpResponseRedirect(reverse('arts:detail', args=(art.id, )))
+
+def recomendations(request):
+	profile = Profile.objects.get(user = request.user)
+	if profile.are_recomendations_are_ready > 15:
+		query = profile.recomendations
+		quer_girl_boy = profile.girl_or_boy
+		maxs = []
+		keys_list = profile.recomendations.split()
+		counted_keys = {}
+		for i in keys_list:
+			counted_keys[i] = keys_list.count(i)
+		for i in range(10):
+			for k, v in counted_keys.items():
+				max_num  = max(counted_keys.values())
+				if v == max_num:
+					maxs.append(k)
+					counted_keys[k] = -1
+					break
+		query = ""
+		for i in maxs:
+			query += f' {i}'
+		girl = quer_girl_boy.split().count("girl")
+		boy = quer_girl_boy.split().count("boy")
+		gender = None
+		if max(girl, boy) == quer_girl_boy.split().count("girl"):
+			gender = "girl"
+		else:
+			gender = "boy"
+		arts = []
+		if list(arts) == []:
+			arts = list(arts)
+			query = query.split()
+			for i in range(len(query)):
+				searched = Art.objects.order_by('-id').filter(Q(keywords__icontains=query[i].lower()) & Q(gender__icontains=gender))
+				for j in range(len(searched)):
+					if searched[j] not in profile.favorites.all():
+						arts.append(searched[j])
+			arts = set(arts[:50])
+	else:
+		arts = []
+	return render(request, 'arts/favorites.html', {'arts': arts})

@@ -1,0 +1,409 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+header {
+    display: flex;
+    padding:3px;
+}
+
+header > .heading {
+    display:block;
+    color:black;
+    text-decoration:none;
+    font-size:35px;
+}
+
+header > form {
+    margin-top:3px;
+    margin-bottom:3px;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+header > form > input {
+    width: 60%;
+    margin-right:5px;
+    height: 30px;
+}
+
+header > form > button {
+    height: 34px;
+}
+
+header > form > button:hover {
+    cursor: pointer;
+}
+
+header > .registration > a {
+    display: block;
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+    text-decoration: right;
+}
+
+header > .registration > a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 5fr .5fr;
+}
+.wrapper {
+    min-height:100vh;
+}
+
+.content > .sidebar {
+    margin-top: 30px;
+    padding:3px;
+}
+
+.content > .sidebar > a {
+    display: block;
+    padding: 5px; 
+    font-size: 20px;
+    color:black;
+    text-decoration:none;
+    border-radius:10px;
+}
+
+.content > .sidebar > a:hover {
+    background: rgb(219, 219, 219);
+}
+
+.inner-content {
+    display:grid;
+    width:100%;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 20px;
+    margin-top: 30px;
+}
+
+.art-link {
+    width: 100%;
+    height:250px;
+    background-position: 50% 50% !important;
+    background-size: cover;
+    border-radius: 10px;
+    transition: .2s;
+}
+
+.art-link:hover {
+    transform: scale(1.1);
+}
+
+.detail {
+    width:100%;
+    display:grid;
+    grid-template-columns: 3fr 1fr;
+}
+
+.inner-detail {
+    border-right:1px solid black;
+    padding: 5px;
+}
+
+.inner-detail > img {
+    max-width:100%;
+    display:block;
+}
+
+.another {
+    padding:2px;
+    padding-left: 10px;
+}
+
+.another-link {
+    display:block;
+    width: 70%;
+    height:200px;
+    background-position: 50% 50% !important;
+    background-size: cover;
+    border-radius: 10px;
+    transition: .2s;
+    margin-top: 10px;
+}
+
+.another-link:hover {
+    transform: scale(1.05);
+    transition: .2s;
+}
+
+.favorites {
+    color: black;
+    text-decoration:none;
+    font-size: 20px;
+}
+
+.favorites:hover {
+    color: red;
+}
+
+.profile-avatar-big {
+    width: 200px;
+    height:200px;
+    background-size:cover;
+    background-position: 50% 50% !important;
+    border-radius:50%;
+    border: 1px solid black;
+}
+
+.login {
+    zoom: 150%;
+}
+
+input {
+    width:200px;
+    height: 20px;
+}
+
+button {
+    width: 70px;
+    height:20px;
+}
+
+.helptext {
+    display:block;
+    color: red;
+}
+
+.register {
+    zoom: 150%;
+}
+
+.register > p{
+    padding-bottom: 10px;
+}
+
+.register > form > p{
+    padding-bottom: 10px;
+}
+
+footer {
+    margin-top: 20px;
+    width:100%;
+    height: 140px;
+    background-color: black;
+    color: white;
+}
+
+footer > p {
+    padding-top:5%;
+    text-align:center;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+.comment_author {
+    text-decoration:none;
+    color:black;
+    font-weight: bold;
+    font-size:20px;
+}
+
+.comment_author:hover {
+    text-decoration: underline;
+}
+
+.profile-avatar-small {
+    width: 15px;
+    height:15px;
+    background-size:cover;
+    background-position: 50% 50% !important;
+    border-radius:50%;
+    border: 1px solid black;
+}
+
+.profile-avatar-medium {
+    width: 40px;
+    height: 40px;
+    background-size:cover;
+    background-position: 50% 50% !important;
+    border-radius:50%;
+    border: 1px solid black;
+}
+
+.edit_profile {
+    zoom: 150%;
+    width: 100%;
+}
+
+.btn {
+    width:150px;
+    height: 20px;
+}
+
+.mini-profile-menu {
+    max-width: 100px;
+    background-color:white;
+    border:1px solid black;
+    border-radius: 5px;
+    margin-top: 5px;
+    position:absolute;
+    z-index: 2;
+    display:none;
+}
+
+.mini-profile-menu > a{
+    display:block;
+    color:black;
+    text-decoration:none;
+    padding: 5px;
+}
+
+.mini-profile-menu > a:hover {
+    background: rgb(219, 219, 219);
+}
+
+.edit_profile_link {
+    color:black;
+    text-decoration:none;
+    margin-top: 5px;
+    display:block;
+}
+
+.edit_profile_link:hover {
+    text-decoration:underline;
+}
+
+.up-sidebar {
+    width:100%;
+    display:none;
+}
+
+.up-sidebar > a {
+    display: block;
+    padding: 5px; 
+    font-size: 20px;
+    color:black;
+    text-decoration:none;
+    border-radius:10px;
+}
+
+.up-sidebar > a:hover {
+    background: rgb(219, 219, 219);
+}
+
+.pagination{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    color: white;
+    margin-top: 30px;
+    zoom:80%;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.pagination > li {
+    list-style: none;
+    margin-left:5px;
+}
+
+.pagination > li > a {
+    color: black;
+    background: #ffffff;
+    padding: 15px;
+    border: 1px solid black;
+    text-decoration: none;
+}
+
+.pagination > li > a:hover {
+    background-color: rgb(219, 219, 219);
+    cursor: pointer;
+}
+
+.pagination > li > .active {
+    background-color: rgb(219, 219, 219);
+}
+
+@media screen and (max-width: 1220px){
+    .mini-profile-menu {
+        right: 10px;
+    }
+}
+
+@media screen and (max-width: 890px) {
+    .sidebar {
+        display:none;
+    }
+    .up-sidebar {
+        display: flex;
+    }
+
+    .content {
+        grid-template-columns: 5fr;
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .profile > .inner-content > .art {
+        height: 150px;
+    }
+    .inner-content {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .art-link {
+        height:100%;
+    }
+    .edit_profile {
+        zoom: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .detail {
+        grid-template-columns: 3fr;
+    }
+    .another {
+        display:none;
+    }
+    .inner-detail {
+        border-right: none;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        zoom: 75%;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .inner-content {
+        grid-template-columns: 1fr;
+    }
+    .art-link {
+        height:300px;
+    }
+    .profile > .inner-content {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .profile > .inner-content {
+        grid-template-columns: 1fr;
+    }
+    .profile > .inner-content > .art {
+        margin-bottom: 30px;
+    }
+    .profile > .inner-content > .art > .art-link {
+        height: 150px;
+    }
+}
+
+@media screen and (max-width: 365px) {
+    body {
+        zoom: 70%;
+    }
+    header {
+        zoom:90%;
+    }
+}
+
